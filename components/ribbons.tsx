@@ -23,14 +23,14 @@ const colorClasses = {
   warning: 'bg-yellow-500 text-black',
   error: 'bg-red-500 text-white',
   info: 'bg-blue-500 text-white',
-}
+} satisfies Record<RibbonProps['color'], string>
 
 const positionClasses = {
   'top-left': 'top-0 left-0 -rotate-45 -translate-x-1/3 -translate-y-1/2',
   'top-right': 'top-0 right-0 rotate-45 translate-x-1/3 -translate-y-1/2',
   'bottom-left': 'bottom-0 left-0 rotate-45 -translate-x-1/3 translate-y-1/2',
   'bottom-right': 'bottom-0 right-0 -rotate-45 translate-x-1/3 translate-y-1/2',
-}
+} satisfies Record<RibbonProps['position'], string>
 
 export const Ribbon = React.forwardRef<HTMLDivElement, RibbonProps>(
   (
