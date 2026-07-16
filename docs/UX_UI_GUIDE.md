@@ -246,8 +246,10 @@ export function DashboardTemplate({ stats, charts, tables }) {
 ### Form Template
 
 ```tsx
+import { useForm } from 'react-hook-form'
 import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 export function FormTemplate({ onSubmit }) {
   const form = useForm()
