@@ -91,7 +91,7 @@ function CustomThemeProvider() {
 ### Animation Best Practices
 
 ```tsx
-import { framer-motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 const variants = {
   hidden: { opacity: 0, y: 20 },
