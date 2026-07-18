@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 import { useMemo, useState, useCallback, useEffect, useRef, createContext, useContext } from "react"
 import { Volume2, VolumeX } from "lucide-react"
 
