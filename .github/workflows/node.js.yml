@@ -16,8 +16,9 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x, 22.x]
-        # Next.js 16 requires Node >=20.9.0; 18.x is no longer supported here.
+        node-version: [22.x]
+        # Next.js 16 requires Node >=20.9.0, but pnpm 11 requires Node >=22.13;
+        # 18.x and 20.x are no longer supported here for that reason.
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
