@@ -3,6 +3,9 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  experimental: {
+    useTypeScriptCli: true,
+  },
   images: {
     unoptimized: true,
   },
