@@ -17,19 +17,21 @@ export function SideNav() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
+        for (let i = 0; i < entries.length; i++) {
+          const entry = entries[i];
           if (entry.isIntersecting) {
             setActiveSection(entry.target.id)
           }
-        })
+        }
       },
       { threshold: 0.3 },
     )
 
-    navItems.forEach(({ id }) => {
-      const element = document.getElementById(id)
+    for (let i = 0; i < navItems.length; i++) {
+      const element = document.getElementById(navItems[i].id)
+
       if (element) observer.observe(element)
-    })
+    }
 
     return () => observer.disconnect()
   }, [])
