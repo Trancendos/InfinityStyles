@@ -6,7 +6,6 @@
       "esnext"
     ],
     "allowJs": true,
-    "target": "ES6",
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
@@ -26,7 +25,11 @@
       "@/*": [
         "./*"
       ]
-    }
+    },
+    "types": [
+      "vitest/globals"
+    ],
+    "target": "ES2017"
   },
   "include": [
     "next-env.d.ts",
