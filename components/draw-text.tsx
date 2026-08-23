@@ -29,9 +29,9 @@ export function DrawText({ text, className = "", duration = 0.08, delay = 0.5, s
       intervalsRef.current = []
 
       // Reset states
-      setDisplayChars(text.split("").map(() => ""))
-      setActiveIndices(text.split("").map(() => false))
-      setFlippingIndices(text.split("").map(() => false))
+      setDisplayChars(characters.map(() => ""))
+      setActiveIndices(characters.map(() => false))
+      setFlippingIndices(characters.map(() => false))
 
       characters.forEach((targetChar, index) => {
         const letterDelay = animationDelay + index * stagger
