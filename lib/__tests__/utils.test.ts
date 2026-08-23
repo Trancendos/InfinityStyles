@@ -11,7 +11,9 @@ describe('cn', () => {
   });
 
   it('should conditionally apply classes', () => {
-    expect(cn('class1', true && 'class2', false && 'class3')).toBe('class1 class2');
+    const hasClass2 = true;
+    const hasClass3 = false;
+    expect(cn('class1', hasClass2 && 'class2', hasClass3 && 'class3')).toBe('class1 class2');
   });
 
   it('should handle array inputs', () => {
