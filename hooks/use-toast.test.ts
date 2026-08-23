@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { reducer } from './use-toast'
 import type { ToastProps } from '@/components/ui/toast'
 import type { ToastActionElement } from '@/components/ui/toast'
@@ -52,8 +53,7 @@ describe('use-toast reducer', () => {
       toast: { id: '2', title: 'New Toast' }
     }
 
-    // @ts-expect-error Types are not fully exported, but testing internals
-    const newState = reducer(initialState, action)
+    const newState = reducer(initialState, action as any)
 
     // Should only have 1 toast due to TOAST_LIMIT
     expect(newState.toasts).toHaveLength(1)
@@ -74,8 +74,7 @@ describe('use-toast reducer', () => {
       toast: { id: '1', title: 'Updated Toast' }
     }
 
-    // @ts-expect-error Types are not fully exported, but testing internals
-    const newState = reducer(initialState, action)
+    const newState = reducer(initialState, action as any)
 
     expect(newState.toasts).toHaveLength(1)
     expect(newState.toasts[0].id).toBe('1')
@@ -97,8 +96,7 @@ describe('use-toast reducer', () => {
       toastId: '1'
     }
 
-    // @ts-expect-error Types are not fully exported, but testing internals
-    const newState = reducer(initialState, action)
+    const newState = reducer(initialState, action as any)
 
     expect(newState.toasts).toHaveLength(2)
     expect(newState.toasts.find(t => t.id === '1')?.open).toBe(false)
@@ -117,8 +115,7 @@ describe('use-toast reducer', () => {
       type: 'DISMISS_TOAST'
     }
 
-    // @ts-expect-error Types are not fully exported, but testing internals
-    const newState = reducer(initialState, action)
+    const newState = reducer(initialState, action as any)
 
     expect(newState.toasts).toHaveLength(2)
     expect(newState.toasts.every(t => t.open === false)).toBe(true)
@@ -137,8 +134,7 @@ describe('use-toast reducer', () => {
       toastId: '1'
     }
 
-    // @ts-expect-error Types are not fully exported, but testing internals
-    const newState = reducer(initialState, action)
+    const newState = reducer(initialState, action as any)
 
     expect(newState.toasts).toHaveLength(1)
     expect(newState.toasts[0].id).toBe('2')
@@ -156,8 +152,7 @@ describe('use-toast reducer', () => {
       type: 'REMOVE_TOAST'
     }
 
-    // @ts-expect-error Types are not fully exported, but testing internals
-    const newState = reducer(initialState, action)
+    const newState = reducer(initialState, action as any)
 
     expect(newState.toasts).toHaveLength(0)
   })

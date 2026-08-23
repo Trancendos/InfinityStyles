@@ -1,5 +1,6 @@
 allowBuilds:
-  sharp: true
+  - esbuild
+  - sharp
 
 # postcss is forced past the CSS-stringify XSS advisory (GHSA-qx2v-qp2m-jg93).
 # The direct devDependency already resolved to a patched 8.5.x; the exposed copy
@@ -9,3 +10,9 @@ allowBuilds:
 # silently ignored and then fails --frozen-lockfile as a config mismatch.
 overrides:
   postcss: ^8.5.25
+
+supportedArchitectures:
+  os:
+    - current
+  cpu:
+    - current
