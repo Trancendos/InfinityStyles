@@ -1,5 +1,6 @@
 allowBuilds:
   sharp: true
+  unrs-resolver: true
 
 # postcss is forced past the CSS-stringify XSS advisory (GHSA-qx2v-qp2m-jg93).
 # The direct devDependency already resolved to a patched 8.5.x; the exposed copy
