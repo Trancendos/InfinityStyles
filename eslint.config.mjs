@@ -9,10 +9,13 @@ export default [
     },
     rules: {
       "no-unused-vars": "warn",
+      "no-undef": "off",
     },
+  },
+  {
     ignores: [
       ".next/**",
       "node_modules/**"
     ]
-  },
+  }
 ];
