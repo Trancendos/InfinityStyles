@@ -10,10 +10,11 @@ describe('toast function', () => {
   afterEach(() => {
     act(() => {
       // Clear all toasts after each test using a generic dismiss
-      const { result } = renderHook(() => useToast())
+      const { result, unmount } = renderHook(() => useToast())
       if (result.current && typeof result.current.dismiss === 'function') {
         result.current.dismiss()
       }
+      unmount()
     })
 
     act(() => {
