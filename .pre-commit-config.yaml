@@ -1,0 +1,37 @@
+# pre-commit.ci is installed on this repository but no config file existed, so
+# it had nothing to read and reported `error during ci config` on every run.
+# That is repo-wide, not per-PR: no pull request here could reach a fully
+# green state regardless of its contents. This file gives the service
+# something valid to run.
+#
+# Check-only by design. pre-commit.ci pushes autofix commits back onto the PR
+# branch, so a formatting hook here would rewrite files across a repo that has
+# never been through one and bury real diffs under the churn. Every hook below
+# either passes or reports; none rewrites a file. Formatting and linting stay
+# with the repo's own Node tooling, which pre-commit.ci does not provision.
+#
+# Verified before landing: `pre-commit run --all-files` passes every hook on
+# the current tree, so this replaces a red status with a green one rather than
+# trading one failure for another.
+
+ci:
+  # Off for the same reason the hooks are check-only.
+  autofix_prs: false
+  autoupdate_schedule: monthly
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-yaml
+        # pnpm owns its lockfile's validity and it is ~150KB of generated
+        # YAML; re-parsing it on every run is pure cost.
+        exclude: ^pnpm-lock\.yaml$
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: detect-private-key
+      - id: check-added-large-files
+        args: ["--maxkb=1024"]
+        # Same reason as check-yaml: the lockfile is legitimately large.
+        exclude: ^pnpm-lock\.yaml$
