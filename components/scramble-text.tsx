@@ -34,10 +34,10 @@ function runScrambleAnimation(
   setDisplayText: (text: string) => void,
   onComplete?: () => void,
 ): gsap.core.Tween {
-  const lockedIndices = new Set<number>()
   const finalChars = text.split("")
   const totalChars = finalChars.length
   const scrambleObj = { progress: 0 }
+  let currentLocked = 0
 
   return gsap.to(scrambleObj, {
     progress: 1,
@@ -45,14 +45,13 @@ function runScrambleAnimation(
     ease: "power2.out",
     onUpdate: () => {
       const numLocked = Math.floor(scrambleObj.progress * totalChars)
-
-      for (let i = 0; i < numLocked; i++) {
-        lockedIndices.add(i)
+      if (numLocked > currentLocked) {
+        currentLocked = numLocked
       }
 
       const newDisplay = finalChars
         .map((char, i) => {
-          if (lockedIndices.has(i)) return char
+          if (i < currentLocked) return char
           return GLYPHS[Math.floor(Math.random() * GLYPHS.length)]
         })
         .join("")
