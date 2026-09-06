@@ -9,8 +9,9 @@ describe('cn() utility function', () => {
   });
 
   it('filters out falsy values', () => {
+    const condition = false;
     expect(cn('class1', null, undefined, false, 0, '')).toBe('class1');
-    expect(cn('class1', false && 'class2', 'class3')).toBe('class1 class3');
+    expect(cn('class1', condition && 'class2', 'class3')).toBe('class1 class3');
   });
 
   it('handles tailwind class merging correctly', () => {
