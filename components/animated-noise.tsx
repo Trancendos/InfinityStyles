@@ -20,24 +20,39 @@ export function AnimatedNoise({ opacity = 0.05, className }: AnimatedNoiseProps)
     let animationId: number
     let frame = 0
 
+    let noiseData: Uint8ClampedArray
+    let targetImageData: ImageData
+
     const resize = () => {
       canvas.width = canvas.offsetWidth / 2
       canvas.height = canvas.offsetHeight / 2
+
+      const width = canvas.width
+      const height = canvas.height
+      const pixelCount = width * height
+
+      targetImageData = ctx.createImageData(width, height)
+
+      const maxOffset = 100000
+      noiseData = new Uint8ClampedArray((pixelCount + maxOffset) * 4)
+
+      for (let i = 0; i < noiseData.length; i += 4) {
+        const value = Math.random() * 255
+        noiseData[i] = value
+        noiseData[i + 1] = value
+        noiseData[i + 2] = value
+        noiseData[i + 3] = 255
+      }
     }
 
     const generateNoise = () => {
-      const imageData = ctx.createImageData(canvas.width, canvas.height)
-      const data = imageData.data
+      if (!noiseData || !targetImageData) return
 
-      for (let i = 0; i < data.length; i += 4) {
-        const value = Math.random() * 255
-        data[i] = value // R
-        data[i + 1] = value // G
-        data[i + 2] = value // B
-        data[i + 3] = 255 // A
-      }
+      const maxOffset = (noiseData.length / 4) - (canvas.width * canvas.height)
+      const offset = Math.floor(Math.random() * maxOffset) * 4
 
-      ctx.putImageData(imageData, 0, 0)
+      targetImageData.data.set(noiseData.subarray(offset, offset + targetImageData.data.length))
+      ctx.putImageData(targetImageData, 0, 0)
     }
 
     const animate = () => {
