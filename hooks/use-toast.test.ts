@@ -16,21 +16,21 @@ describe('use-toast', () => {
   })
 
   it('toast function returns id, dismiss, and update', () => {
-    let toastRef: any
+    let toastRef: ReturnType<typeof toast> | undefined
     act(() => {
       toastRef = toast({ title: 'Test Toast' })
     })
 
     expect(toastRef).toBeDefined()
-    expect(toastRef.id).toBeDefined()
-    expect(typeof toastRef.dismiss).toBe('function')
-    expect(typeof toastRef.update).toBe('function')
+    expect(toastRef!.id).toBeDefined()
+    expect(typeof toastRef!.dismiss).toBe('function')
+    expect(typeof toastRef!.update).toBe('function')
   })
 
   it('update function updates the toast', () => {
     const { result } = renderHook(() => useToast())
 
-    let toastRef: any
+    let toastRef: ReturnType<typeof toast> | undefined
     act(() => {
       toastRef = toast({ title: 'Initial Title' })
     })
@@ -38,7 +38,7 @@ describe('use-toast', () => {
     expect(result.current.toasts[0].title).toBe('Initial Title')
 
     act(() => {
-      toastRef.update({ title: 'Updated Title' })
+      toastRef!.update({ title: 'Updated Title' })
     })
 
     expect(result.current.toasts[0].title).toBe('Updated Title')
@@ -54,7 +54,7 @@ describe('use-toast', () => {
   it('dismiss function dismisses the toast', () => {
     const { result } = renderHook(() => useToast())
 
-    let toastRef: any
+    let toastRef: ReturnType<typeof toast> | undefined
     act(() => {
       toastRef = toast({ title: 'To Be Dismissed' })
     })
@@ -62,7 +62,7 @@ describe('use-toast', () => {
     expect(result.current.toasts[0].open).toBe(true)
 
     act(() => {
-      toastRef.dismiss()
+      toastRef!.dismiss()
     })
 
     expect(result.current.toasts[0].open).toBe(false)
@@ -182,7 +182,7 @@ describe('use-toast', () => {
     vi.useFakeTimers()
     const { result } = renderHook(() => useToast())
 
-    let toastRef: any
+    let toastRef: ReturnType<typeof toast> | undefined
     act(() => {
       toastRef = toast({ title: 'To Be Dismissed' })
     })
@@ -190,7 +190,7 @@ describe('use-toast', () => {
     expect(result.current.toasts).toHaveLength(1)
 
     act(() => {
-      toastRef.dismiss()
+      toastRef!.dismiss()
     })
 
     expect(result.current.toasts[0].open).toBe(false)
