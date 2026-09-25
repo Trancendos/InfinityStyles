@@ -7,7 +7,7 @@ This document provides a comprehensive overview of all improvements made to the 
 ### Scope
 - ✅ **Repository Restructuring** - Organized components into logical folders
 - ✅ **Documentation Enhancement** - Comprehensive guides and API docs
-- ✅ **Testing Setup** - Jest, Vitest, and Playwright configuration
+- ✅ **Testing Setup** - Vitest and Playwright configuration
 - ✅ **CI/CD Automation** - Linting and deployment workflows
 - ✅ **Code Quality** - ESLint, TypeScript strict mode, pre-commit hooks
 - ✅ **Developer Experience** - Better imports, scripts, and tooling
@@ -144,54 +144,43 @@ docs/
 
 ## 🧪 Testing Configuration
 
-### Jest Setup (`jest.config.js`)
-- Next.js integration
+### Vitest Setup (`vitest.config.mjs`)
+- Modern test runner with Vite integration
 - TypeScript support
 - Path aliases resolution
 - Coverage reporting
 - Test environment configuration
 
 **Features:**
-- Automatic Next.js config loading
+- Global test API (describe, it, expect, vi)
 - jsdom environment for DOM testing
-- Module name mapping for imports
-- Collect coverage from components, hooks, lib
-
-### Vitest Setup (`vitest.config.ts`)
-- Alternative modern test runner
-- Faster test execution
-- Better IDE integration
-- UI dashboard support
-
-**Features:**
-- Global test API
-- jsdom environment
-- Path alias resolution
-- Coverage v8 provider
-- HTML report generation
+- React plugin integration
+- `@` alias resolution for imports
+- Testing Library integration
 
 ### Setup Files
-- `jest.setup.js` - Jest configuration
+- `vitest.setup.ts` - Vitest configuration
   - @testing-library/jest-dom integration
   - window.matchMedia mock
-  - IntersectionObserver mock
-  - ResizeObserver mock
-  - Console error suppression
-
-- `vitest.setup.ts` - Vitest configuration
-  - Similar mocks for Vitest
-  - Testing library setup
   - Browser API polyfills
 
-### New Test Scripts
+- `vitest-globals.d.ts` - Global type definitions
+  - Vitest globals (describe, it, expect, vi)
+  - Jest-DOM matchers for TypeScript
+
+### Test Scripts
 ```bash
-pnpm test              # Run Jest tests
-pnpm test:watch       # Watch mode
-pnpm test:coverage    # Coverage report
-pnpm test:vitest      # Run Vitest
-pnpm test:vitest:ui   # Vitest UI dashboard
-pnpm test:e2e         # Playwright E2E tests
+pnpm test              # Run Vitest tests
+pnpm typecheck        # Run TypeScript type checking
 ```
+
+### Test Files
+Tests are located alongside their source files:
+- `__tests__/components/ui/button.test.tsx`
+- `components/__tests__/animated-noise.test.tsx`
+- `hooks/__tests__/use-mobile.test.tsx`
+- `hooks/use-toast.test.ts`
+- `lib/__tests__/utils.test.ts`
 
 ---
 
@@ -240,24 +229,25 @@ API_URL=http://localhost:3000/api
 
 ## 🔄 CI/CD Workflows
 
-### Lint Workflow (`.github/workflows/lint.yml`)
+### Lint Workflow (`.github/workflows/node.js.yml`)
 - Runs on push to main/develop
 - Runs on pull requests
-- Tests on Node 18.x and 20.x
+- Tests on Node 22.x
 - Steps:
-  1. Checkout code
-  2. Install pnpm
-  3. Install dependencies
-  4. Run ESLint
-  5. Build project
+   1. Checkout code
+   2. Install pnpm 12
+   3. Install dependencies with frozen lockfile
+   4. Run TypeScript type checking
+   5. Run Vitest tests
+   6. Build project
 
 ### Deploy Workflow (`.github/workflows/deploy.yml`)
 - Runs on push to main
 - Deploys to Vercel production
 - Requires secrets:
-  - VERCEL_TOKEN
-  - VERCEL_ORG_ID
-  - VERCEL_PROJECT_ID
+   - VERCEL_TOKEN
+   - VERCEL_ORG_ID
+   - VERCEL_PROJECT_ID
 
 ---
 
@@ -293,15 +283,10 @@ pnpm start                  # Start production server
 pnpm lint                   # Run ESLint
 pnpm lint:fix              # Fix ESLint issues
 pnpm format                # Format with Prettier
-pnpm type-check            # Check TypeScript
+pnpm typecheck             # Check TypeScript
 
 # Testing
-pnpm test                  # Run Jest tests
-pnpm test:watch            # Watch mode
-pnpm test:coverage         # Coverage report
-pnpm test:vitest           # Run Vitest
-pnpm test:vitest:ui        # Vitest UI
-pnpm test:e2e              # E2E tests
+pnpm test                  # Run Vitest tests
 
 # Documentation
 pnpm storybook             # Start Storybook
@@ -326,7 +311,6 @@ pnpm storybook:build       # Build Storybook
 - ✅ Troubleshooting guide
 
 ### Testing
-- ✅ Jest configuration
 - ✅ Vitest setup
 - ✅ Playwright E2E setup
 - ✅ Test utilities and mocks

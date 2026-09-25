@@ -9,3 +9,12 @@ allowBuilds:
 # silently ignored and then fails --frozen-lockfile as a config mismatch.
 overrides:
   postcss: ^8.5.25
+
+# Refuse any package published in the last day. pnpm 12 enforces this by
+# default and rejected twelve entries of a lockfile resolved minutes after
+# their release; declaring it here means the lockfile is resolved under the
+# same rule that verifies it, rather than depending on how long ago the
+# resolution happened to run. It is also the guard itself: the window in which
+# a compromised release is live and unreported is measured in hours, and this
+# is the setting that keeps the estate out of it.
+minimumReleaseAge: 1440

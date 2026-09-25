@@ -13,9 +13,9 @@ interface DrawTextProps {
 
 export function DrawText({ text, className = "", duration = 0.08, delay = 0.5, stagger = 0.08 }: DrawTextProps) {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [displayChars, setDisplayChars] = useState<string[]>(text.split("").map(() => ""))
-  const [activeIndices, setActiveIndices] = useState<boolean[]>(text.split("").map(() => false))
-  const [flippingIndices, setFlippingIndices] = useState<boolean[]>(text.split("").map(() => false))
+  const [displayChars, setDisplayChars] = useState<string[]>(() => text.split("").map(() => ""))
+  const [activeIndices, setActiveIndices] = useState<boolean[]>(() => text.split("").map(() => false))
+  const [flippingIndices, setFlippingIndices] = useState<boolean[]>(() => text.split("").map(() => false))
   const [hasAnimated, setHasAnimated] = useState(false)
   const intervalsRef = useRef<NodeJS.Timeout[]>([])
 
@@ -29,9 +29,9 @@ export function DrawText({ text, className = "", duration = 0.08, delay = 0.5, s
       intervalsRef.current = []
 
       // Reset states
-      setDisplayChars(text.split("").map(() => ""))
-      setActiveIndices(text.split("").map(() => false))
-      setFlippingIndices(text.split("").map(() => false))
+      setDisplayChars(characters.map(() => ""))
+      setActiveIndices(characters.map(() => false))
+      setFlippingIndices(characters.map(() => false))
 
       characters.forEach((targetChar, index) => {
         const letterDelay = animationDelay + index * stagger

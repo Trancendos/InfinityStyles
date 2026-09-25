@@ -17,7 +17,7 @@ jobs:
     strategy:
       matrix:
         node-version: [22.x]
-        # Next.js 16 requires Node >=20.9.0, but pnpm 11 requires Node >=22.13;
+        # Next.js 16 requires Node >=20.9.0, but pnpm requires Node >=22.13;
         # 18.x and 20.x are no longer supported here for that reason.
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
@@ -25,11 +25,13 @@ jobs:
     - uses: actions/checkout@v7
     - uses: pnpm/action-setup@v6
       with:
-        version: 11
+        version: 12
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v7
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'pnpm'
     - run: pnpm install --frozen-lockfile
+    - run: pnpm run typecheck
+    - run: pnpm test
     - run: pnpm run build
